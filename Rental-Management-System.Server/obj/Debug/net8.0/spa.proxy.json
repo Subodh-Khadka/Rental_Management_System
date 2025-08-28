@@ -1,0 +1,10 @@
+{
+"SpaProxyServer": {
+"ServerUrl": "https://localhost:51633",
+"RedirectUrl": "",
+"LaunchCommand": "npm run dev",
+"WorkingDirectory": "C:\\Users\\khadk\\source\\repos\\Rental-Management-System\\Rental-Management-System.Server\\..\\rental-management-system.client",
+"MaxTimeoutInSeconds": "120",
+"KeepRunning": "false"
+}
+}
