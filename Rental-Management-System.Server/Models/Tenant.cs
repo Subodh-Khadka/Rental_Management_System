@@ -9,5 +9,9 @@
         // Navigation property
         public Room Room { get; set; }
         public ICollection<RentPayment>? Payments { get; set; }
+
+        // Soft delete
+        public bool IsDeleted { get; set; } = false;
+        public DateTime? DeletedDate { get; set; }
     }
 }

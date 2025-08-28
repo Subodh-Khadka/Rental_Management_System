@@ -8,5 +8,9 @@
 
         // Navigation property
         public ICollection<Tenant> Tenants { get; set; }
+
+        // Soft delete
+        public bool IsDeleted { get; set; } = false;
+        public DateTime? DeletedDate { get; set; }
     }
 }

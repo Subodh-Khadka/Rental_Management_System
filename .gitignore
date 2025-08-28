@@ -1,0 +1,16 @@
+# Visual Studio
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.dll
+*.pdb
+
+# React / Node
+rental-management-system.client/node_modules/
+rental-management-system.client/dist/
+rental-management-system.client/build/
+
+# VS Code
+.vscode/
