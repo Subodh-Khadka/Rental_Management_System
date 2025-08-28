@@ -1,14 +1,19 @@
-﻿namespace Rental_Management_System.Server.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Rental_Management_System.Server.Models
 {
    public class Tenant
     {
-        public int TenantId { get; set; }
+        [Key]
+        public Guid TenantId { get; set; }
         public string? Name { get; set; }
-        public int RoomId { get; set; }
+        public Guid RoomId { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? EmailAdress { get; set; }
 
         // Navigation property
-        public Room Room { get; set; }
-        public ICollection<RentPayment>? Payments { get; set; }
+        public ICollection<RentalContract> RentalContracts { get; set; } = new List<RentalContract>();
+        public ICollection<RentPayment> Payments { get; set; } = new List<RentPayment>();
 
         // Soft delete
         public bool IsDeleted { get; set; } = false;

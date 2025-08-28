@@ -1,4 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
+using Rental_Management_System.Server.Data;
+
 namespace Rental_Management_System.Server
 {
     public class Program
@@ -8,6 +11,9 @@ namespace Rental_Management_System.Server
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddDbContext<RentalDbContext>(options => 
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+            );
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -15,6 +21,14 @@ namespace Rental_Management_System.Server
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+
+            //seeding data
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<RentalDbContext>();
+                db.Database.Migrate(); // Ensure DB is up-to-date
+                db.SeedData();         // Seed initial data
+            }
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
