@@ -1,6 +1,11 @@
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Rental_Management_System.Server.Data;
+using Rental_Management_System.Server.MappingProfiles;
+using Rental_Management_System.Server.Middleware;
+using Rental_Management_System.Server.Repositories.Room;
+using Rental_Management_System.Server.Services.Room;
 
 namespace Rental_Management_System.Server
 {
@@ -16,13 +21,25 @@ namespace Rental_Management_System.Server
             );
 
             builder.Services.AddControllers();
+
+            //added
+            builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+            builder.Services.AddAutoMapper(cfg =>
+            {
+                cfg.AddProfile<RoomProfile>();
+            });
+            builder.Services.AddScoped<IRoomService, RoomService>();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            var app = builder.Build();
+            using var app = builder.Build();
 
-            //seeding data
+            // middleware
+            app.UseMiddleware<ExceptionMiddleware>();
+
+
+            // seeding data
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<RentalDbContext>();
