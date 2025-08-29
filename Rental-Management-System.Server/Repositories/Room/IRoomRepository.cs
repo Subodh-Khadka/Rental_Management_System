@@ -10,7 +10,5 @@
         Task UpdateAsync(Room room);
         Task DeleteAsync(Room room);
         Task SaveChangesAsync();
-        
-        
     }
 }

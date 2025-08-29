@@ -5,7 +5,9 @@ using Rental_Management_System.Server.Data;
 using Rental_Management_System.Server.MappingProfiles;
 using Rental_Management_System.Server.Middleware;
 using Rental_Management_System.Server.Repositories.Room;
+using Rental_Management_System.Server.Repositories.Tenant;
 using Rental_Management_System.Server.Services.Room;
+using Rental_Management_System.Server.Services.Tenant;
 
 namespace Rental_Management_System.Server
 {
@@ -24,11 +26,15 @@ namespace Rental_Management_System.Server
 
             //added
             builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+            builder.Services.AddScoped<ITenantRepository, TenantRepository>();
             builder.Services.AddAutoMapper(cfg =>
             {
                 cfg.AddProfile<RoomProfile>();
+                cfg.AddProfile<TenantProfile>();
             });
             builder.Services.AddScoped<IRoomService, RoomService>();
+            builder.Services.AddScoped<ITenantService, TenantService>();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -36,7 +42,7 @@ namespace Rental_Management_System.Server
             using var app = builder.Build();
 
             // middleware
-            app.UseMiddleware<ExceptionMiddleware>();
+            //app.UseMiddleware<ExceptionMiddleware>();
 
 
             // seeding data

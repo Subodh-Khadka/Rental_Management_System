@@ -35,7 +35,7 @@ namespace Rental_Management_System.Server.Middleware
                     _ => (int)HttpStatusCode.InternalServerError
                 };
 
-                var response = ApiResponse<string>.Fail(ex.Message);
+                var response = ApiResponse<string>.FailResponse(ex.Message);
                 await context.Response.WriteAsJsonAsync(response);
             }
         }

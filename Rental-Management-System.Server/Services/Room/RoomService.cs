@@ -1,6 +1,7 @@
 ﻿namespace Rental_Management_System.Server.Services.Room
 {
     using AutoMapper;
+    using Rental_Management_System.Server.DTOs;
     using Rental_Management_System.Server.DTOs.Room;
     using Rental_Management_System.Server.Models;
     using Rental_Management_System.Server.Repositories.Room;
@@ -19,46 +20,58 @@
             _roomRepository = roomRepository;
         }
 
-        public async Task<IEnumerable<RoomDto>> GetAllRoomsAsync()
+        public async Task<ApiResponse<IEnumerable<RoomDto>>> GetAllRoomsAsync()
         {
             var rooms = await _roomRepository.GetAllAsync();
-            return _mapper.Map<IEnumerable<RoomDto>>(rooms);
-        }
+            var roomDtos = _mapper.Map<IEnumerable<RoomDto>>(rooms);
+            return ApiResponse<IEnumerable<RoomDto>>.SuccessResponse(roomDtos);
+        }   
 
-        public async Task<RoomDto> GetRoomByIdAsync(Guid roomId)
+        public async Task<ApiResponse<RoomDto>> GetRoomByIdAsync(Guid roomId)
         {
-            var room = await  _roomRepository.GetByIdAsync(roomId);
-            return _mapper.Map<RoomDto>(room);
+            var room = await _roomRepository.GetByIdAsync(roomId);
+            if (room == null)
+                return ApiResponse<RoomDto>.FailResponse("Room not found");
+
+            var roomDto = _mapper.Map<RoomDto>(room);
+            return ApiResponse<RoomDto>.SuccessResponse(roomDto);
         }
 
-        public async Task<RoomDto> CreateRoomAsync(CreateRoomDto createRoomDto)
+        public async Task<ApiResponse<RoomDto>> CreateRoomAsync(CreateRoomDto createRoomDto)
         {
             var room = _mapper.Map<Room>(createRoomDto);
             await _roomRepository.AddAsync(room);
             await _roomRepository.SaveChangesAsync();
-            return _mapper.Map<RoomDto>(room);
+
+            var roomDto = _mapper.Map<RoomDto>(room);
+            return ApiResponse<RoomDto>.SuccessResponse(roomDto, "Room created successfully");
         }
 
-        public async Task<RoomDto> UpdateRoomAsync(Guid roomId, UpdateRoomDto updateRoomDto)
+        public async Task<ApiResponse<RoomDto>> UpdateRoomAsync(Guid roomId, UpdateRoomDto updateRoomDto)
         {
             var room = await _roomRepository.GetByIdAsync(roomId);
-            if (room == null) return null;
+            if (room == null)
+                return ApiResponse<RoomDto>.FailResponse("Room not found");
 
             _mapper.Map(updateRoomDto, room);
             await _roomRepository.UpdateAsync(room);
             await _roomRepository.SaveChangesAsync();
 
-            return _mapper.Map<RoomDto>(room);
+            var roomDto = _mapper.Map<RoomDto>(room);
+            return ApiResponse<RoomDto>.SuccessResponse(roomDto, "Room updated successfully");
         }
 
-        public async Task DeleteRoomAsync(Guid roomId)
+        public async Task<ApiResponse<bool>> DeleteRoomAsync(Guid roomId)
         {
             var room = await _roomRepository.GetByIdAsync(roomId);
-            if (room == null) return;
+            if (room == null)
+                return ApiResponse<bool>.FailResponse("Room not found");
 
             await _roomRepository.DeleteAsync(room);
             await _roomRepository.SaveChangesAsync();
-        }
 
+            return ApiResponse<bool>.SuccessResponse(true, "Room deleted successfully");
+        }
     }
+
 }

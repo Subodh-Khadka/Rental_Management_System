@@ -39,7 +39,7 @@
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var createdRoom = await _roomService.CreateRoomAsync(roomDto);
-            return CreatedAtAction(nameof(GetRoomById), new { id = createdRoom.RoomId }, createdRoom);
+            return CreatedAtAction(nameof(GetRoomById), new { id = createdRoom.Data.RoomId }, createdRoom);
         }
 
         // PUT: api/room/{id}
