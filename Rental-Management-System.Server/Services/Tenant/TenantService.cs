@@ -47,11 +47,12 @@ namespace Rental_Management_System.Server.Services.Tenant
 
         public async Task<ApiResponse<bool>> DeleteTenantAsync(Guid tenantId)
         {
-            var existingItem = await _tenantRepository.GetByIdAsync(tenantId);
-            if (existingItem == null)
+            var tenant = await _tenantRepository.GetByIdAsync(tenantId);
+            if (tenant == null)
                 return ApiResponse<bool>.FailResponse("Tenant Not Found!");
 
-            await _tenantRepository.DeleteAsync(tenantId);
+            await _tenantRepository.DeleteAsync(tenant);
+            await _tenantRepository.SavechangesAsync();
             return ApiResponse<bool>.SuccessResponse(true, "Tenant Deleted Successfully");
         }
 

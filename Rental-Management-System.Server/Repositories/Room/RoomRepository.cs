@@ -17,7 +17,7 @@
             return allRooms;
         }
 
-        public async Task<Room> GetByIdAsync(Guid roomId)
+        public async Task<Room?> GetByIdAsync(Guid roomId)
         {
            var selectedRoom = await _context.Rooms
                                  .FirstOrDefaultAsync(r => r.RoomId == roomId && !r.IsDeleted);
@@ -40,7 +40,7 @@
             room.IsDeleted = true;
             room.DeletedDate = DateTime.UtcNow;
             _context.Rooms.Update(room);
-            return Task.CompletedTask ;
+            return Task.CompletedTask;
         }
 
         public async Task SaveChangesAsync()

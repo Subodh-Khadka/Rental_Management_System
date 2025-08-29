@@ -5,10 +5,10 @@ namespace Rental_Management_System.Server.Repositories.Tenant
     public interface ITenantRepository
     {
         Task<IEnumerable<Tenant>> GetAllAsync();
-        Task<Tenant> GetByIdAsync(Guid tenantId);
-        Task<Tenant> AddAsync(Tenant tenant);
-        Task<Tenant> UpdateAsync(Tenant tenant);
-        Task<bool> DeleteAsync(Guid tenantId);
+        Task<Tenant?> GetByIdAsync(Guid tenantId);
+        Task AddAsync(Tenant tenant);
+        Task UpdateAsync(Tenant tenant);
+        Task DeleteAsync(Tenant tenant);
         Task SavechangesAsync();
 
     }

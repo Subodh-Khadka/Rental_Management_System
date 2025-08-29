@@ -1,7 +1,4 @@
-﻿
-
-
-namespace Rental_Management_System.Server.Repositories.Tenant
+﻿namespace Rental_Management_System.Server.Repositories.Tenant
 {
     using Microsoft.AspNetCore.Http.HttpResults;
     using Microsoft.EntityFrameworkCore;
@@ -16,38 +13,35 @@ namespace Rental_Management_System.Server.Repositories.Tenant
             _context = context;
         }
 
-        public async Task<Models.Tenant> AddAsync(Tenant tenant)
-        {
-             var entityEntry = await _context.Tenants.AddAsync(tenant);
-            _context.SaveChanges(); 
-            return entityEntry.Entity;
-        }
-
-        public async Task<bool> DeleteAsync(Guid tenantId)
-        {
-            var existingTenant = _context.Tenants.FirstOrDefault(t => t.TenantId == tenantId);
-            if (existingTenant == null)
-            {
-                return false;
-            }
-            existingTenant.IsDeleted = true;
-            existingTenant.DeletedDate = DateTime.UtcNow;
-            _context.Tenants.Update(existingTenant);
-
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
         public async Task<IEnumerable<Models.Tenant>> GetAllAsync()
         {
-            var tenants = await _context.Tenants.Where(t => !t.IsDeleted).ToListAsync();
-            return tenants;
+            return await _context.Tenants.Where(t => !t.IsDeleted).ToListAsync();
+
         }
 
-        public async Task<Models.Tenant> GetByIdAsync(Guid tenantId)
+        public async Task<Models.Tenant?> GetByIdAsync(Guid tenantId)
         {
-            var tenant = await _context.Tenants.FirstOrDefaultAsync(t => t.TenantId == tenantId);
-            return tenant;
+            return await _context.Tenants.FirstOrDefaultAsync(t => t.TenantId == tenantId);
+        }
+
+
+        public async Task AddAsync(Tenant tenant)
+        {
+             await _context.Tenants.AddAsync(tenant); 
+        }
+        public Task UpdateAsync(Models.Tenant tenant)
+        {
+            _context.Tenants.Update(tenant);
+            return Task.CompletedTask;
+
+        }
+
+        public Task DeleteAsync(Tenant tenant)
+        {
+            tenant.IsDeleted = true;
+            tenant.DeletedDate = DateTime.UtcNow;
+            _context.Tenants.Update(tenant);
+            return Task.CompletedTask;
         }
 
         public async Task SavechangesAsync()
@@ -55,11 +49,6 @@ namespace Rental_Management_System.Server.Repositories.Tenant
             await _context.SaveChangesAsync();
         }
 
-        public  async Task<Models.Tenant> UpdateAsync(Models.Tenant tenant)
-        {
-            var updatedRoom = _context.Tenants.Update(tenant);
-            await _context.SaveChangesAsync();
-            return updatedRoom.Entity;
-        }
+      
     }
 }
