@@ -6,10 +6,12 @@ using Rental_Management_System.Server.MappingProfiles;
 using Rental_Management_System.Server.Middleware;
 using Rental_Management_System.Server.Repositories.MonthlyCharge;
 using Rental_Management_System.Server.Repositories.RentalContract;
+using Rental_Management_System.Server.Repositories.RentPayment;
 using Rental_Management_System.Server.Repositories.Room;
 using Rental_Management_System.Server.Repositories.Tenant;
 using Rental_Management_System.Server.Services.MonthlyCharge;
 using Rental_Management_System.Server.Services.RentalContract;
+using Rental_Management_System.Server.Services.RentPayment;
 using Rental_Management_System.Server.Services.Room;
 using Rental_Management_System.Server.Services.Tenant;
 
@@ -33,17 +35,20 @@ namespace Rental_Management_System.Server
             builder.Services.AddScoped<ITenantRepository, TenantRepository>();
             builder.Services.AddScoped<IRentalContractRepository, RentalContractRepository>();
             builder.Services.AddScoped<IMonthlyChargeRepository, MonthlyChargeRepository>();
+            builder.Services.AddScoped<IRentPaymentRepository, RentPaymentRepository>();
             builder.Services.AddAutoMapper(cfg =>
             {
                 cfg.AddProfile<RoomProfile>();
                 cfg.AddProfile<TenantProfile>();
                 cfg.AddProfile<RentalContractProfile>();
                 cfg.AddProfile<MonthlyChargeProfile>();
+                cfg.AddProfile<RentPaymentProfile>();
             });
             builder.Services.AddScoped<IRoomService, RoomService>();
             builder.Services.AddScoped<ITenantService, TenantService>();
             builder.Services.AddScoped<IRentalContractService, RentalContractService>();
             builder.Services.AddScoped<IMonthlyChargeService, MonthlyChargeService>();
+            builder.Services.AddScoped<IRentPaymentService, RentPaymentService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -56,12 +61,12 @@ namespace Rental_Management_System.Server
 
 
             // seeding data
-            using (var scope = app.Services.CreateScope())
-            {
-                var db = scope.ServiceProvider.GetRequiredService<RentalDbContext>();
-                db.Database.Migrate(); // Ensure DB is up-to-date
-                db.SeedData();         // Seed initial data
-            }
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    var db = scope.ServiceProvider.GetRequiredService<RentalDbContext>();
+            //    db.Database.Migrate(); // Ensure DB is up-to-date
+            //    db.SeedData();         // Seed initial data
+            //}
 
             app.UseDefaultFiles();
             app.UseStaticFiles();

@@ -1,7 +1,7 @@
 ﻿namespace Rental_Management_System.Server.Repositories.RentPayment
 {
     using Rental_Management_System.Server.Models;
-    public interface IPaymentRepository
+    public interface IRentPaymentRepository
     {
         Task<IEnumerable<RentPayment>> GetAllAsync();
         Task<RentPayment?> GetByIdAsync(Guid rentPaymentId);

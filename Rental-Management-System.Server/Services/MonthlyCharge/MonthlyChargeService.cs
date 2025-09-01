@@ -13,10 +13,10 @@ using Rental_Management_System.Server.Models;
     public class MonthlyChargeService : IMonthlyChargeService
     {
         private readonly IMonthlyChargeRepository _monthlyChargeRepository;
-        private readonly IPaymentRepository _paymentRepository;
+        private readonly IRentPaymentRepository _paymentRepository;
         private readonly IMapper _mapper;
 
-        public MonthlyChargeService(IMonthlyChargeRepository monthlyChargeRepository, IMapper mapper, IPaymentRepository paymentRepository) 
+        public MonthlyChargeService(IMonthlyChargeRepository monthlyChargeRepository, IMapper mapper, IRentPaymentRepository paymentRepository) 
         {
             _mapper = mapper;
             _monthlyChargeRepository = monthlyChargeRepository;

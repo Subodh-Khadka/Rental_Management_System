@@ -4,11 +4,11 @@
     using Rental_Management_System.Server.Data;
     using Microsoft.EntityFrameworkCore;
 
-    public class PaymentRepository : IPaymentRepository
+    public class RentPaymentRepository : IRentPaymentRepository
     {
         private readonly RentalDbContext _context;
 
-        public PaymentRepository(RentalDbContext context)
+        public RentPaymentRepository(RentalDbContext context)
         {
             _context = context;
         }
