@@ -2,6 +2,7 @@
 
 namespace Rental_Management_System.Server.Models
 {
+
     public class RentPayment
     {
         [Key]
@@ -23,7 +24,5 @@ namespace Rental_Management_System.Server.Models
         public Room Room { get; set; }
         public RentalContract RentalContract { get; set; }
         public ICollection<MonthlyCharge> MonthlyCharges { get; set; } = new List<MonthlyCharge>();
-
-
     }
 }

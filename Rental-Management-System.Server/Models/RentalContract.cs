@@ -17,7 +17,6 @@ namespace Rental_Management_System.Server.Models
         // Navigation
         public Tenant Tenant { get; set; }
         public Room Room { get; set; }
-        public ICollection<RentPayment> Payments { get; set; } = new List<RentPayment>();
-       
+        public ICollection<RentPayment> Payments { get; set; } = new List<RentPayment>();       
     }
 }

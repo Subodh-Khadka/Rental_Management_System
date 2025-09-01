@@ -5,7 +5,7 @@ using Rental_Management_System.Server.Models;
 using Rental_Management_System.Server.Services.Tenant;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 
-namespace Rental_Management_System.Server.Controllers.Room
+namespace Rental_Management_System.Server.Controllers.Tenant
 {
     [Route("api/[controller]")]
     [ApiController]
