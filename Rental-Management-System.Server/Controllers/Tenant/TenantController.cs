@@ -22,11 +22,9 @@ namespace Rental_Management_System.Server.Controllers.Tenant
         public async Task<IActionResult> GetAllTenants()
         {
             var response = await _tenantService.GetAllTenantsAsync();
-            if (!response.Success)
-            {
-                return NotFound(response);
-            }
-            return Ok(response);
+            if (response == null) return NotFound(response);
+
+            return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpGet("{id}")]

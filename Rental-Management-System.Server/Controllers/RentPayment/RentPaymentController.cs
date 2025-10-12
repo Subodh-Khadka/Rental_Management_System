@@ -63,5 +63,25 @@ namespace Rental_Management_System.Server.Controllers.RentPayment
             var response = await _rentPaymentService.DeleteRentPaymentAsync(rentPaymentId);
             return response.Success ? Ok(response) : BadRequest(nameof(response));
         }
+
+        [HttpGet("by-month/{month}")]
+        public async Task<IActionResult> GetByMonth(string month)
+        {
+            var response = await _rentPaymentService.GetRentPaymentsByMonthAsync(month);
+            if (!response.Success)
+                return BadRequest(response);
+            return Ok(response);
+        }
+
+        [HttpPost("generate")]
+        public async Task<IActionResult> GenerateRentPayment([FromBody] GenerateRentPaymentDto dto)
+        {
+            if (dto == null)
+                return BadRequest("Invalid request body.");
+
+            var response = await _rentPaymentService.GenerateRentPaymentAsync(dto);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+
     }
 }

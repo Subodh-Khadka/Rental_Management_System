@@ -12,7 +12,7 @@ namespace Rental_Management_System.Server.DTOs.Tenant
         public string? PhoneNumber { get; set; }
         [Required]
         [EmailAddress]
-        public string? EmailAdress { get; set; }
+        public string? EmailAddress { get; set; }
         [Required(ErrorMessage = "Room assignment is required!")]
         public Guid RoomId { get; set; }
 

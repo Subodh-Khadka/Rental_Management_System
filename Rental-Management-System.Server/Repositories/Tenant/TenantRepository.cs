@@ -15,13 +15,16 @@
 
         public async Task<IEnumerable<Models.Tenant>> GetAllAsync()
         {
-            return await _context.Tenants.Where(t => !t.IsDeleted).ToListAsync();
-
+             return await _context.Tenants
+            .Include(t => t.Room)
+            .Where(t => !t.IsDeleted)
+            .ToListAsync();
         }
 
         public async Task<Models.Tenant?> GetByIdAsync(Guid tenantId)
         {
-            return await _context.Tenants.FirstOrDefaultAsync(t => t.TenantId == tenantId);
+            return await _context.Tenants
+                .Include(t => t.Room).FirstOrDefaultAsync(t => t.TenantId == tenantId);
         }
 
 

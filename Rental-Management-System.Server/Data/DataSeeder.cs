@@ -31,7 +31,7 @@ namespace Rental_Management_System.Server.Data
                         TenantId = Guid.NewGuid(),
                         Name = "Subodh Khadka",
                         PhoneNumber = "9800000000",
-                        EmailAdress = "subodh@example.com",
+                        EmailAddress = "subodh@example.com",
                         RoomId = firstRoom.RoomId
                     },
                     new Tenant
@@ -39,7 +39,7 @@ namespace Rental_Management_System.Server.Data
                         TenantId = Guid.NewGuid(),
                         Name = "Aayush Shrestha",
                         PhoneNumber = "9811111111",
-                        EmailAdress = "aayush@example.com",
+                        EmailAddress = "aayush@example.com",
                         RoomId = firstRoom.RoomId
                     }
                 };
@@ -80,8 +80,8 @@ namespace Rental_Management_System.Server.Data
                     {
                         PaymentId = Guid.NewGuid(),
                         RentalContractId = contract.RentalContractId,
-                        RoomId = room.RoomId,
                         RoomPrice = room.RoomPrice,
+                        RoomId = room.RoomId,
                         PaidAmount = 0,
                         PaymentMonth = DateTime.Now
                     }

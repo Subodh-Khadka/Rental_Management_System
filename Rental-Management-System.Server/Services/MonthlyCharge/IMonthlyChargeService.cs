@@ -12,5 +12,7 @@ namespace Rental_Management_System.Server.Services.MonthlyCharge
         Task<ApiResponse<MonthlyChargeDto>> UpdateMonthlyChargeAsync(Guid monthlyChargeId, UpdateMonthlyChargeDto updateMonthlyChargeDto);
 
         Task<ApiResponse<bool>> DeleteMonthlyChargeAsync(Guid monthlyChargeId);
+        Task<ApiResponse<GenerateMonthlyChargeResultDto>> GenerateMonthlyChargesAsync(GenerateMonthlyChargeDto dto);
+        Task<ApiResponse<IEnumerable<MonthlyChargeSummaryDto>>> GetMonthlyChargeSummaryAsync();
     }
 }

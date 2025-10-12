@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Rental_Management_System.Server.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Rental_Management_System.Server.Data
 {
-    public class RentalDbContext : DbContext
+    public class RentalDbContext : IdentityDbContext<ApplicationUser>
     {
         public RentalDbContext(DbContextOptions<RentalDbContext> options) : base(options) { }
 
@@ -14,6 +15,7 @@ namespace Rental_Management_System.Server.Data
         public DbSet<RentalContract> RentalContracts { get; set; }
         public DbSet<MonthlyCharge> MonthlyCharges { get; set; }
         public DbSet<PaymentTransaction> PaymentTransactions { get; set; }
+        public DbSet<ChargeTemplate> ChargeTemplates { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,7 +34,14 @@ namespace Rental_Management_System.Server.Data
                 .WithMany(rc => rc.Payments)
                 .HasForeignKey(rp => rp.RentalContractId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Tenant>()
+        .HasOne(t => t.Room)
+        .WithMany() // or .WithMany(r => r.Tenants) if navigation exists
+        .HasForeignKey(t => t.RoomId)
+        .OnDelete(DeleteBehavior.NoAction); // <-- prevent cascade
         }
+
     }
 
 }

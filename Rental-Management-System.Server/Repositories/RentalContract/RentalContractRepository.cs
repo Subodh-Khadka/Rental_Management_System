@@ -14,7 +14,10 @@
 
         public async Task<IEnumerable<RentalContract>> GetAllAsync()
         {
-            return await _context.RentalContracts.Where(r => !r.IsDeleted).ToListAsync();
+            return await _context.RentalContracts.Where(r => !r.IsDeleted)
+                .Include(cr => cr.Room)
+                .Include(cr => cr.Tenant)
+                .ToListAsync();
         }
 
         public async Task<RentalContract?> GetByIdAsync(Guid rentalContractId)

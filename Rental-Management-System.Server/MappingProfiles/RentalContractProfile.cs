@@ -11,7 +11,10 @@ using AutoMapper;
     {
         public RentalContractProfile() 
         {
-            CreateMap<RentalContract, RentalContractDto>();
+            CreateMap<RentalContract, RentalContractDto>()
+                .ForMember(dest => dest.RoomTitle, opt => opt.MapFrom(src => src.Room.RoomTitle))
+                .ForMember(dest => dest.TenantName, opt => opt.MapFrom(src => src.Tenant.Name))
+                 .ForMember(dest => dest.RoomPrice, opt => opt.MapFrom(src => src.Room.RoomPrice));
             CreateMap<CreateRentalContractDto,RentalContract >();
             CreateMap<UpdateRentalContractDto,RentalContract >();
         }

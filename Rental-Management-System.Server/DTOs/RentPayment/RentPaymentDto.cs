@@ -5,12 +5,10 @@ namespace Rental_Management_System.Server.DTOs.RentPayment
 {
     public class RentPaymentDto
     {
-        [Key]
         public Guid PaymentId { get; set; }
         public Guid RentalContractId { get; set; }
         public DateTime PaymentMonth { get; set; }
         public decimal RoomPrice { get; set; }
-        public Guid RoomId { get; set; }
 
         public decimal TotalAmount { get; set; }
         public decimal PaidAmount { get; set; }
@@ -18,8 +16,9 @@ namespace Rental_Management_System.Server.DTOs.RentPayment
 
 
         // Navigation Data (Flattened for client)
-        public string? RoomName { get; set; }
+        public string? RoomTitle { get; set; }
         public string? TenantName { get; set; }
         public List<MonthlyChargeDto>? MonthlyCharges { get; set; }
     }
 }
+            

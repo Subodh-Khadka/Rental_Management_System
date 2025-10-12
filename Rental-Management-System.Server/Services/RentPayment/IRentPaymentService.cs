@@ -12,8 +12,11 @@ namespace Rental_Management_System.Server.Services.RentPayment
 
         Task<ApiResponse<RentPaymentDto>> CreateRentPaymentAsync(CreateRentPaymentDto createRentPaymentDto);
         Task<ApiResponse<RentPaymentDto>> UpdateRentPaymentAsync(Guid rentPaymentId, UpdateRentPaymentDto updateRentPaymentDto);
-
         Task<ApiResponse<bool>> DeleteRentPaymentAsync(Guid rentPaymentId);
+
+        Task<ApiResponse<GenerateRentPaymentResultDto>> GenerateRentPaymentAsync(GenerateRentPaymentDto dto);
+        Task<ApiResponse<IEnumerable<RentPaymentDto>>> GetRentPaymentsByMonthAsync(string month);
+
     }
 }
     

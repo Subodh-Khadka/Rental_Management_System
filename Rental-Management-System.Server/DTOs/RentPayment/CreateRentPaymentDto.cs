@@ -8,7 +8,7 @@ namespace Rental_Management_System.Server.DTOs.RentPayment
         [Required(ErrorMessage = "Rental Contrac tId Id is a required field")]
         public Guid RentalContractId { get; set; }
         [Required(ErrorMessage = "Room Id is a required field")]
-        public Guid RoomId { get; set; }
+
         public DateTime PaymentMonth { get; set; }
         public decimal RoomPrice { get; set; }
         public decimal PaidAmount { get; set; }

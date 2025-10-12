@@ -10,5 +10,6 @@ namespace Rental_Management_System.Server.DTOs.Room
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Room price must be greater than zero")]
         public decimal RoomPrice { get; set; }
+        public bool IsActive { get; set; }
     }
 }

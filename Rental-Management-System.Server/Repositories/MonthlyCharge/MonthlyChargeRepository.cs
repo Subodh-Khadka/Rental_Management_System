@@ -2,6 +2,7 @@
 {
     using Microsoft.EntityFrameworkCore;
     using Rental_Management_System.Server.Data;
+    using Rental_Management_System.Server.DTOs.MonthlyCharge;
     using Rental_Management_System.Server.Models;
     using Rental_Management_System.Server.Repositories;
     public class MonthlyChargeRepository : IMonthlyChargeRepository
@@ -15,7 +16,13 @@
 
         public async Task<IEnumerable<MonthlyCharge>> GetAllAsync()
         {
-            return await _context.MonthlyCharges.Where(m => !m.IsDeleted).ToListAsync();
+            return await _context.MonthlyCharges.Where(m => !m.IsDeleted)
+            .Include(mc => mc.RentPayment)
+                .ThenInclude(rp => rp.Room)
+            .Include(mc => mc.RentPayment)
+                .ThenInclude(rp => rp.RentalContract)
+                    .ThenInclude(rc => rc.Tenant)
+            .ToListAsync();
         }
 
         public async Task<MonthlyCharge?> GetByIdAsync(Guid monthlyChargeId)
@@ -46,5 +53,34 @@
         {
             await _context.SaveChangesAsync();
         }
+
+        public async Task AddRangeAsync(IEnumerable<MonthlyCharge> charges)
+        {
+            await _context.MonthlyCharges.AddRangeAsync(charges);
+        }
+
+        // ✅ Load relations so we can group in the service
+        public async Task<IEnumerable<MonthlyCharge>> GetAllWithRelationsAsync()
+        {
+            return await _context.MonthlyCharges
+                .Include(m => m.RentPayment)
+                    .ThenInclude(r => r.Room)
+                .Include(m => m.RentPayment)
+                    .ThenInclude(r => r.RentalContract)
+                        .ThenInclude(c => c.Tenant)
+                .ToListAsync();
+        }
+
+        public IQueryable<MonthlyCharge> Query()
+        {
+            return _context.MonthlyCharges
+                .Where(m => !m.IsDeleted)
+                .Include(m => m.RentPayment)
+                    .ThenInclude(r => r.Room)
+                .Include(m => m.RentPayment)
+                    .ThenInclude(r => r.RentalContract)
+                        .ThenInclude(c => c.Tenant);
+        }
+
     }
 }

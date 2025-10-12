@@ -7,5 +7,6 @@ namespace Rental_Management_System.Server.DTOs.RentPayment
         [Required(ErrorMessage ="Payment Id is a required field")]
         public Guid PaymentId { get; set; }
         public decimal PaidAmount { get; set; }
+        public DateTime? PaymentMonth {  get; set; }
     }
 }

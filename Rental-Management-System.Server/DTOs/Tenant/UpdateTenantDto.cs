@@ -13,6 +13,6 @@ namespace Rental_Management_System.Server.DTOs.Tenant
         [Required]
         [Phone]
         public string Phonenumber { get; set; }
-
+        public bool IsActive { get; set; }
     }
 }

@@ -1,8 +1,9 @@
 ﻿namespace Rental_Management_System.Server.Repositories.RentPayment
 {
-    using Rental_Management_System.Server.Models;
-    using Rental_Management_System.Server.Data;
     using Microsoft.EntityFrameworkCore;
+    using Rental_Management_System.Server.Data;
+    using Rental_Management_System.Server.Models;
+    using System.Runtime.InteropServices;
 
     public class RentPaymentRepository : IRentPaymentRepository
     {
@@ -15,12 +16,22 @@
 
         public async Task<IEnumerable<RentPayment>> GetAllAsync()
         {
-            return await _context.RentPayments.Where(r => !r.IsDeleted).ToListAsync();
+            return await _context.RentPayments.Where(r => !r.IsDeleted)
+                .Include(rp => rp.RentalContract).ThenInclude(rc => rc.Room)
+                .Include(rp => rp.RentalContract).ThenInclude(rc => rc.Tenant)
+                .Include(rp => rp.MonthlyCharges)         
+                .ToListAsync();
         }
 
-        public async Task<RentPayment?> GetByIdAsync(Guid rentPaymentId)
+        public async Task<RentPayment?> GetByIdAsync(Guid transactionId)
         {
-            return await _context.RentPayments.FirstOrDefaultAsync(r => r.PaymentId == rentPaymentId && !r.IsDeleted);
+            return await _context.RentPayments
+        .Include(rp => rp.RentalContract)
+            .ThenInclude(rc => rc.Room)
+        .Include(rp => rp.RentalContract)
+            .ThenInclude(rc => rc.Tenant)
+        .Include(rp => rp.MonthlyCharges)
+        .FirstOrDefaultAsync(rp => rp.PaymentId == transactionId);
         }
 
         public async Task AddAsync(RentPayment rentPayment)
@@ -45,6 +56,29 @@
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public IQueryable<RentPayment> Query()
+        {
+            return _context.RentPayments.Where(m => !m.IsDeleted).Include(p => p.Room)
+                .Include(r => r.RentalContract).ThenInclude(r => r.Room);
+
+
+        }
+
+        public async Task AddRangeAsync(IEnumerable<RentPayment> rentPaymentList)
+        {
+            await _context.RentPayments.AddRangeAsync(rentPaymentList);
+        }
+    public async Task<IEnumerable<RentPayment>> GetRentPaymentsByMonthAsync(DateTime month)
+        {
+            return await _context.RentPayments.Where(rp => !rp.IsDeleted)
+               .Include(rp => rp.Room)
+               .Include(rp => rp.RentalContract)
+                   .ThenInclude(rc => rc.Tenant)
+               .Where(rp => rp.PaymentMonth.Year == month.Year &&
+                            rp.PaymentMonth.Month == month.Month)
+               .ToListAsync();
         }
     }
 }

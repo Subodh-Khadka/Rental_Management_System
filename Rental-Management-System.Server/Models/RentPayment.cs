@@ -18,6 +18,7 @@ namespace Rental_Management_System.Server.Models
         public decimal TotalAmount => RoomPrice + MonthlyCharges.Sum(x => x.Amount);
         public decimal PaidAmount { get; set; }
         public decimal DueAmount => TotalAmount - PaidAmount;
+        public string status { get; set; }
 
 
         // Navigation Property 

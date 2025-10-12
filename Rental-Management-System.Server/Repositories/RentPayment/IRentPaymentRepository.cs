@@ -9,5 +9,9 @@
         Task UpdateAsync(RentPayment rentPayment);
         Task DeleteAsync(RentPayment rentPayment);
         Task SaveChangesAsync();
+
+        IQueryable<RentPayment> Query();
+        Task AddRangeAsync(IEnumerable<RentPayment> rentPaymentList);
+        Task<IEnumerable<RentPayment>> GetRentPaymentsByMonthAsync(DateTime month);
     }
 }

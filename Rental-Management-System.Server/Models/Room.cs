@@ -15,5 +15,7 @@ namespace Rental_Management_System.Server.Models
         // Soft delete
         public bool IsDeleted { get; set; } = false;
         public DateTime? DeletedDate { get; set; }
+
+        public bool? IsActive { get; set; } = true;
     }
 }

@@ -34,6 +34,13 @@ namespace Rental_Management_System.Server.Controllers.MonthlyCharge
             return response.Success ? Ok(response) : NotFound(response);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> CreateMonthlyCharge(CreateMonthlyChargeDto createMonthlyChargeDto)
+        {
+            var response = await _monthlyChargeService.CreateMonthlyChargeAsync(createMonthlyChargeDto);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+
         [HttpPut("{monthlyChargeId}")]
         public async Task<IActionResult> UpdateMonthlyCharge(Guid monthlyChargeId, [FromBody] UpdateMonthlyChargeDto updateMonthlyChargeDto)
         {
@@ -51,5 +58,21 @@ namespace Rental_Management_System.Server.Controllers.MonthlyCharge
             var response = await _monthlyChargeService.DeleteMonthlyChargeAsync(monthlyChargeId);
             return response.Success ? Ok(response) : BadRequest(nameof(response));
         }
+
+        [HttpPost("generate")]
+        public async Task<IActionResult> GenerateMonthlyCharges([FromBody] GenerateMonthlyChargeDto dto)
+        {
+            var response = await _monthlyChargeService.GenerateMonthlyChargesAsync(dto);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+
+        [HttpGet("summary")]
+        public async Task<IActionResult> GetSummary()
+        {
+            var result = await _monthlyChargeService.GetMonthlyChargeSummaryAsync();
+            return Ok(result);
+        }
+
+
     }
 }

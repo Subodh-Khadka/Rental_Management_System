@@ -59,7 +59,7 @@ namespace Rental_Management_System.Server.Services.Tenant
         public async Task<ApiResponse<IEnumerable<TenantDto>>> GetAllTenantsAsync()
         {
             var tenants = await _tenantRepository.GetAllAsync();
-            if(!tenants.Any())
+            if(tenants == null)
             {
                 return ApiResponse<IEnumerable<TenantDto>>.FailResponse("No Tenants Data");
             }
@@ -91,6 +91,7 @@ namespace Rental_Management_System.Server.Services.Tenant
 
             _mapper.Map(updateTenantDto, existingTenant);
             await _tenantRepository.UpdateAsync(existingTenant);
+            await _tenantRepository.SavechangesAsync();
 
             var tenantDto = _mapper.Map<TenantDto>(existingTenant);
             return ApiResponse<TenantDto>.SuccessResponse(tenantDto, "Tenant Updated Successfully");

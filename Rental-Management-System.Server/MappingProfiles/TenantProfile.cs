@@ -10,7 +10,9 @@ using AutoMapper;
     {
         public TenantProfile() 
         {
-            CreateMap<Tenant, TenantDto>();
+            CreateMap<Tenant, TenantDto>()
+                .ForMember(dest => dest.RoomTitle,
+                            opt => opt.MapFrom(src => src.Room !=null ? src.Room.RoomTitle : null));
             CreateMap<CreateTenantDto,Tenant >();
             CreateMap<UpdateTenantDto,Tenant >();
         }

@@ -5,6 +5,7 @@
         public Guid RoomId { get; set; }
         public string RoomTitle { get; set; }
         public decimal RoomPrice { get; set; }
+        public bool IsActive { get; set; }
 
     }
 }

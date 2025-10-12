@@ -13,7 +13,9 @@
 
         public async Task<IEnumerable<Room>> GetAllAsync()
         {
-           var allRooms =  await _context.Rooms.Where(r => !r.IsDeleted).ToListAsync();
+           var allRooms =  await _context.Rooms.Where(r => r.IsActive == true && r.IsDeleted != true)
+                .Include(r => r.RentalContracts)
+                .ToListAsync();
             return allRooms;
         }
 
