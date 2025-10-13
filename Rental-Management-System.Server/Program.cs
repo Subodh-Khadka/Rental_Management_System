@@ -21,6 +21,7 @@ using Rental_Management_System.Server.Services.Tenant;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Rental_Management_System.Server.Services.User;
 
 
 namespace Rental_Management_System.Server
@@ -70,7 +71,6 @@ namespace Rental_Management_System.Server
             });
 
 
-
             // Add controllers
             builder.Services.AddControllers();
 
@@ -93,6 +93,7 @@ namespace Rental_Management_System.Server
                 cfg.AddProfile<MonthlyChargeProfile>();
                 cfg.AddProfile<RentPaymentProfile>();
                 cfg.AddProfile<PaymentTransactionProfile>();
+                cfg.AddProfile<UserProfile>();
             });
 
             // Register services
@@ -103,6 +104,9 @@ namespace Rental_Management_System.Server
             builder.Services.AddScoped<IMonthlyChargeService, MonthlyChargeService>();
             builder.Services.AddScoped<IRentPaymentService, RentPaymentService>();
             builder.Services.AddScoped<IPaymentTransactionService, PaymentTransactionService>();
+            builder.Services.AddScoped<IUserService, UserService>();    
+
+
 
             // Configure Swagger/OpenAPI
             builder.Services.AddEndpointsApiExplorer();
@@ -151,12 +155,16 @@ namespace Rental_Management_System.Server
 
             var app = builder.Build();
 
+            //SeedData(app);
+
+
             // Middleware pipeline
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
 
             app.UseHttpsRedirection();
 
@@ -174,6 +182,50 @@ namespace Rental_Management_System.Server
             app.MapFallbackToFile("/index.html");
 
             app.Run();
+
+            //// Call async method safely
+            //static void SeedData(WebApplication app)
+            //{
+            //    if (app.Environment.IsDevelopment())
+            //    {
+            //        using var scope = app.Services.CreateScope();
+            //        var services = scope.ServiceProvider;
+
+            //        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+            //        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+
+            //        // Use Task.Run + Wait or .GetAwaiter().GetResult()
+            //        Task.Run(async () =>
+            //        {
+            //            // Seed roles
+            //            string[] roleNames = { "Admin", "User" };
+            //            foreach (var roleName in roleNames)
+            //            {
+            //                if (!await roleManager.RoleExistsAsync(roleName))
+            //                    await roleManager.CreateAsync(new IdentityRole(roleName));
+            //            }
+
+            //            // Seed admin user
+            //            string adminEmail = "admin@example.com";
+            //            string adminPassword = "Admin@123";
+
+            //            var adminUser = await userManager.FindByEmailAsync(adminEmail);
+            //            if (adminUser == null)
+            //            {
+            //                adminUser = new ApplicationUser
+            //                {
+            //                    UserName = adminEmail,
+            //                    Email = adminEmail,
+            //                    FirstName = "Super",
+            //                    LastName = "Admin"
+            //                };
+            //                await userManager.CreateAsync(adminUser, adminPassword);
+            //                await userManager.AddToRoleAsync(adminUser, "Admin");
+            //            }
+
+            //        }).GetAwaiter().GetResult(); // Wait for completion
+            //    }
+            //}
         }
     }
 }

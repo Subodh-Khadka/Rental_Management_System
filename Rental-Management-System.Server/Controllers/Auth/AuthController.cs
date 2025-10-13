@@ -50,6 +50,8 @@ namespace Rental_Management_System.Server.Controllers
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
+            await _userManager.AddToRoleAsync(user, "User");
+
             return Ok("User registered successfully.");
         }
 
@@ -98,7 +100,7 @@ namespace Rental_Management_System.Server.Controllers
             var jwtSettings = _config.GetSection("Jwt");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]));
 
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
@@ -106,6 +108,13 @@ namespace Rental_Management_System.Server.Controllers
                 new Claim("FirstName", user.FirstName ?? ""),
                 new Claim("LastName", user.LastName ?? "")
             };
+
+            // Add roles as claims
+            var roles = _userManager.GetRolesAsync(user).Result; 
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -119,5 +128,20 @@ namespace Rental_Management_System.Server.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+
+        [HttpPost("make-admin/{email}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> MakeAdmin(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null) return NotFound();
+
+            var result = await _userManager.AddToRoleAsync(user, "Admin");
+            if (!result.Succeeded) return BadRequest(result.Errors);
+
+            return Ok("User promoted to Admin");
+        }
+
     }
 }
