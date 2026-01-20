@@ -179,5 +179,5 @@ C:\Users\khadk\source\repos\Rental-Management-System\Rental-Management-System.Se
 C:\Users\khadk\source\repos\Rental-Management-System\Rental-Management-System.Server\bin\Debug\net8.0\Microsoft.Extensions.Identity.Core.dll
 C:\Users\khadk\source\repos\Rental-Management-System\Rental-Management-System.Server\bin\Debug\net8.0\Microsoft.Extensions.Identity.Stores.dll
 C:\Users\khadk\source\repos\Rental-Management-System\Rental-Management-System.Server\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-C:\Users\khadk\source\repos\Rental-Management-System\Rental-Management-System.Server\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\khadk\source\repos\Rental-Management-System\Rental-Management-System.Server\obj\Debug\net8.0\swae.build.ex.cache
+C:\Users\khadk\source\repos\Rental-Management-System\Rental-Management-System.Server\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

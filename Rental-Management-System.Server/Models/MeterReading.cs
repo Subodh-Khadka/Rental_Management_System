@@ -13,7 +13,7 @@ namespace Rental_Management_System.Server.Models
         public Guid PaymentId { get; set; }
         public RentPayment? RentPayment { get; set; }
 
-        public string Month { get; set; } = string.Empty; // format YYYY-MM
+        public DateTime Month { get; set; }
 
         public decimal PreviousReading { get; set; }
         public decimal CurrentReading { get; set; }

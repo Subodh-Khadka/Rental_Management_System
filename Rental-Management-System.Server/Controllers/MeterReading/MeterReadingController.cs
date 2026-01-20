@@ -31,7 +31,7 @@ namespace Rental_Management_System.Server.Controllers.MeterReading
         }
 
         [HttpGet("payment/{paymentId}/month/{month}")]
-        public async Task<IActionResult> GetByPaymentAndMonth(Guid paymentId, string month)
+        public async Task<IActionResult> GetByPaymentAndMonth(Guid paymentId, DateTime month)
         {
             var result = await _service.GetByPaymentAndMonthAsync(paymentId, month);
             if (!result.Success) return NotFound(result);

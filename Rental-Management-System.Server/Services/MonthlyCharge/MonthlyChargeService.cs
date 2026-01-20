@@ -145,10 +145,13 @@ using Rental_Management_System.Server.Models;
                         if (template.ChargeType == "Electricity")
                         {
                             var previousReading = await _meterReadingRepository.Query()
-                                .Where(r => r.PaymentId == payment.PaymentId)
-                                .OrderByDescending(r => r.Month)
-                                .Select(r => r.CurrentReading)
-                                .FirstOrDefaultAsync();
+                            .Where(r =>
+                                r.RoomId == payment.RoomId &&
+                                r.Month < monthDate)
+                            .OrderByDescending(r => r.Month)
+                            .Select(r => r.CurrentReading)
+                            .FirstOrDefaultAsync();
+
 
                             var currentReading = paymentDto?.Templates
                                 ?.FirstOrDefault(t => t.TemplateId == template.ChargeTemplateId)?.Units ?? 0;
@@ -160,7 +163,9 @@ using Rental_Management_System.Server.Models;
                                 MeterReadingId = Guid.NewGuid(),
                                 PaymentId = payment.PaymentId,
                                 RentPayment = payment,
-                                Month = dto.Month,
+                                RoomId = payment.RoomId,
+                                Room = payment.Room,
+                                Month = monthDate,
                                 PreviousReading = previousReading,
                                 CurrentReading = currentReading
                             });

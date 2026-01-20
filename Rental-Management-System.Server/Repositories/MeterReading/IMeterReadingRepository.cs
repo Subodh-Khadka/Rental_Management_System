@@ -5,7 +5,7 @@
     {
         Task<IEnumerable<MeterReading>> GetAllAsync();
         Task<MeterReading?> GetByIdAsync(Guid meterReadingId);
-        Task<MeterReading?> GetByPaymentAndMonthAsync(Guid paymentId, string month);
+        Task<MeterReading?> GetByPaymentAndMonthAsync(Guid paymentId, DateTime month);
         Task AddAsync(MeterReading meterReading);
         Task UpdateAsync(MeterReading meterReading);
         Task DeleteAsync(MeterReading meterReading);

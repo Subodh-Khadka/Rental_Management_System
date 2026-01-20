@@ -34,7 +34,7 @@ namespace Rental_Management_System.Server.Repositories.MeterReading
             return await _context.MeterReadings.FirstOrDefaultAsync(m => m.MeterReadingId == meterReadingId);
         }
 
-        public async Task<MeterReading?> GetByPaymentAndMonthAsync(Guid paymentId, string month)
+        public async Task<MeterReading?> GetByPaymentAndMonthAsync(Guid paymentId, DateTime month)
         {
             return await _context.MeterReadings
                 .FirstOrDefaultAsync(m => m.PaymentId == paymentId && m.Month == month);

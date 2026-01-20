@@ -5,8 +5,7 @@ namespace Rental_Management_System.Server.DTOs.MonthlyCharge
     public class GenerateMonthlyChargeDto
     {
         [Required(ErrorMessage = "Month is required")]
-        public string Month { get; set; } = string.Empty; // format: "2025-10"
-
+        public string Month { get; set; } = string.Empty; // "2026-01"
         public List<PaymentUnitDto> Payments { get; set; } = new();
     }
 

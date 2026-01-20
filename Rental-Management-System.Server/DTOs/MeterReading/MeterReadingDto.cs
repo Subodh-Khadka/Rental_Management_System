@@ -4,7 +4,7 @@
     {
         public Guid MeterReadingId { get; set; }
         public Guid PaymentId { get; set; }
-        public string Month { get; set; } = string.Empty;
+        public DateTime Month { get; set; }
         public decimal PreviousReading { get; set; }
         public decimal CurrentReading { get; set; }
         public decimal UnitsUsed { get; set; }

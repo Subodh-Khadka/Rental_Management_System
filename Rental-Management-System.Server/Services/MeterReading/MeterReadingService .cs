@@ -78,20 +78,24 @@ namespace Rental_Management_System.Server.Services.MeterReading
             return ApiResponse<MeterReadingDto>.SuccessResponse(dto, "Meter reading fetched successfully");
         }
 
-        public async Task<ApiResponse<MeterReadingDto>> GetByPaymentAndMonthAsync(Guid paymentId, string month)
+        public async Task<ApiResponse<MeterReadingDto>> GetByPaymentAndMonthAsync(Guid paymentId,DateTime month)
         {
-            if (string.IsNullOrEmpty(month))
-                return ApiResponse<MeterReadingDto>.FailResponse("Month is required");
+            // Normalize month → first day of the month
+            month = new DateTime(month.Year, month.Month, 1);
 
-            // Try to fetch the reading from the database
+            // Fetch reading for the same payment & same month
             var reading = await _repo.Query()
-                                     .FirstOrDefaultAsync(r => r.PaymentId == paymentId && r.Month.StartsWith(month));
+                .FirstOrDefaultAsync(r =>
+                    r.PaymentId == paymentId &&
+                    r.Month.Year == month.Year &&
+                    r.Month.Month == month.Month
+                );
 
             MeterReadingDto dto;
 
             if (reading == null)
             {
-                // Return a default DTO if no reading exists yet
+                // Return default DTO if no reading exists
                 dto = new MeterReadingDto
                 {
                     MeterReadingId = Guid.Empty,
@@ -102,13 +106,19 @@ namespace Rental_Management_System.Server.Services.MeterReading
                     UnitsUsed = 0
                 };
 
-                return ApiResponse<MeterReadingDto>.SuccessResponse(dto, "No meter reading found, returning default");
+                return ApiResponse<MeterReadingDto>.SuccessResponse(
+                    dto,
+                    "No meter reading found, returning default"
+                );
             }
 
-            // Map existing reading if found
             dto = _mapper.Map<MeterReadingDto>(reading);
-            return ApiResponse<MeterReadingDto>.SuccessResponse(dto, "Meter reading fetched successfully");
+            return ApiResponse<MeterReadingDto>.SuccessResponse(
+                dto,
+                "Meter reading fetched successfully"
+            );
         }
+
 
 
         public async Task<ApiResponse<MeterReadingDto>> UpdateAsync(Guid meterReadingId, UpdateMeterReadingDto updateDto)
