@@ -271,6 +271,35 @@ namespace Rental_Management_System.Server.Migrations
                     b.ToTable("ChargeTemplates");
                 });
 
+            modelBuilder.Entity("Rental_Management_System.Server.Models.MeterReading", b =>
+                {
+                    b.Property<Guid>("MeterReadingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("CurrentReading")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Month")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PaymentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("PreviousReading")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("RentPaymentPaymentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("MeterReadingId");
+
+                    b.HasIndex("RentPaymentPaymentId");
+
+                    b.ToTable("MeterReadings");
+                });
+
             modelBuilder.Entity("Rental_Management_System.Server.Models.MonthlyCharge", b =>
                 {
                     b.Property<Guid>("MonthlyChargeId")
@@ -343,6 +372,9 @@ namespace Rental_Management_System.Server.Migrations
 
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<decimal?>("ElectricityUnitReading")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -526,6 +558,17 @@ namespace Rental_Management_System.Server.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Rental_Management_System.Server.Models.MeterReading", b =>
+                {
+                    b.HasOne("Rental_Management_System.Server.Models.RentPayment", "RentPayment")
+                        .WithMany()
+                        .HasForeignKey("RentPaymentPaymentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RentPayment");
                 });
 
             modelBuilder.Entity("Rental_Management_System.Server.Models.MonthlyCharge", b =>

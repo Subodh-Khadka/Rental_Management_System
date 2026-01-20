@@ -52,7 +52,7 @@ namespace Rental_Management_System.Server.Controllers
 
             await _userManager.AddToRoleAsync(user, "User");
 
-            return Ok("User registered successfully.");
+            return result.Succeeded ? Ok(result) : BadRequest(result);
         }
 
         [HttpPost("login")]

@@ -2,8 +2,8 @@
 {
     public class PaymentTransactionDto
     {
-        public Guid TransactionId { get; set; }
-        public Guid RentPaymentId { get; set; }
+        public string TransactionId { get; set; }
+        public string RentPaymentId { get; set; }
         public DateTime? PaymentDate { get; set; }
         public decimal? AmountPaid { get; set; }
     }

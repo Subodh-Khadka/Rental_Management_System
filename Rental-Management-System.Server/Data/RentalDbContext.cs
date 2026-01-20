@@ -11,11 +11,12 @@ namespace Rental_Management_System.Server.Data
         public DbSet<Tenant> Tenants { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<RentPayment> RentPayments { get; set; }
-
         public DbSet<RentalContract> RentalContracts { get; set; }
         public DbSet<MonthlyCharge> MonthlyCharges { get; set; }
         public DbSet<PaymentTransaction> PaymentTransactions { get; set; }
         public DbSet<ChargeTemplate> ChargeTemplates { get; set; }
+        public DbSet<MeterReading> MeterReadings { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

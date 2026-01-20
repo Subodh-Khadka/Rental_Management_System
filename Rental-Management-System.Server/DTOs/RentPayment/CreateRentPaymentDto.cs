@@ -12,6 +12,7 @@ namespace Rental_Management_System.Server.DTOs.RentPayment
         public DateTime PaymentMonth { get; set; }
         public decimal RoomPrice { get; set; }
         public decimal PaidAmount { get; set; }
+        public string Status { get; set; }
 
         // Optional: to add monthly charges while creating
         public List<CreateMonthlyChargeDto>? MonthlyCharges { get; set; }

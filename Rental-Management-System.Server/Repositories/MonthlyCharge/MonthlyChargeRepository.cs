@@ -57,7 +57,7 @@
         public async Task AddRangeAsync(IEnumerable<MonthlyCharge> charges)
         {
             await _context.MonthlyCharges.AddRangeAsync(charges);
-        }
+        }   
 
         // ✅ Load relations so we can group in the service
         public async Task<IEnumerable<MonthlyCharge>> GetAllWithRelationsAsync()

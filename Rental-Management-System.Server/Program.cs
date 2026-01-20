@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Rental_Management_System.Server.Data;
 using Rental_Management_System.Server.MappingProfiles;
 using Rental_Management_System.Server.Models;
 using Rental_Management_System.Server.Repositories.CharegTemplate;
+using Rental_Management_System.Server.Repositories.MeterReading;
 using Rental_Management_System.Server.Repositories.MonthlyCharge;
 using Rental_Management_System.Server.Repositories.PaymentTransaction;
 using Rental_Management_System.Server.Repositories.RentalContract;
@@ -11,17 +14,16 @@ using Rental_Management_System.Server.Repositories.RentPayment;
 using Rental_Management_System.Server.Repositories.Room;
 using Rental_Management_System.Server.Repositories.Tenant;
 using Rental_Management_System.Server.Services.ChargeTemplate;
+using Rental_Management_System.Server.Services.DashboardService;
+using Rental_Management_System.Server.Services.MeterReading;
 using Rental_Management_System.Server.Services.MonthlyCharge;
 using Rental_Management_System.Server.Services.PaymentTransaction;
 using Rental_Management_System.Server.Services.RentalContract;
 using Rental_Management_System.Server.Services.RentPayment;
 using Rental_Management_System.Server.Services.Room;
 using Rental_Management_System.Server.Services.Tenant;
-
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Rental_Management_System.Server.Services.User;
+using System.Text;
 
 
 namespace Rental_Management_System.Server
@@ -82,6 +84,7 @@ namespace Rental_Management_System.Server
             builder.Services.AddScoped<IRentPaymentRepository, RentPaymentRepository>();
             builder.Services.AddScoped<IMonthlyChargeRepository, MonthlyChargeRepository>();
             builder.Services.AddScoped<IPaymentTransactionRepository, PaymentTransactionRepository>();
+            builder.Services.AddScoped<IMeterReadingRepository, MeterReadingRepository>();
 
             // Register AutoMapper profiles
             builder.Services.AddAutoMapper(cfg =>
@@ -94,6 +97,7 @@ namespace Rental_Management_System.Server
                 cfg.AddProfile<RentPaymentProfile>();
                 cfg.AddProfile<PaymentTransactionProfile>();
                 cfg.AddProfile<UserProfile>();
+                cfg.AddProfile<MeterReadingProfile>();
             });
 
             // Register services
@@ -104,7 +108,10 @@ namespace Rental_Management_System.Server
             builder.Services.AddScoped<IMonthlyChargeService, MonthlyChargeService>();
             builder.Services.AddScoped<IRentPaymentService, RentPaymentService>();
             builder.Services.AddScoped<IPaymentTransactionService, PaymentTransactionService>();
-            builder.Services.AddScoped<IUserService, UserService>();    
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IDashboardService, DashboardService>();
+            builder.Services.AddScoped<IMeterReadingService, MeterReadingService>();
+
 
 
 

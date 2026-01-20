@@ -7,6 +7,7 @@ using Rental_Management_System.Server.Repositories.RentPayment;
 namespace Rental_Management_System.Server.Services.RentPayment
 {
     using Microsoft.EntityFrameworkCore;
+    using Rental_Management_System.Server.Data;
     using Rental_Management_System.Server.DTOs.RentPayment;
     using Rental_Management_System.Server.Models;
     using Rental_Management_System.Server.Repositories.RentalContract;
@@ -170,7 +171,8 @@ namespace Rental_Management_System.Server.Services.RentPayment
                     RoomId = room.RoomId,
                     PaymentMonth = monthDate,
                     RoomPrice = room.RoomPrice,
-                    PaidAmount = 0
+                    PaidAmount = 0,
+                    status = StaticDetail.RentPaymentStatusPending
                 };
 
                 paymentsToCreate.Add(rentPayment);
@@ -199,12 +201,25 @@ namespace Rental_Management_System.Server.Services.RentPayment
 
             var payments = await _paymentRepository.GetRentPaymentsByMonthAsync(monthDate);
 
-            if (payments == null || !payments.Any())
-                return ApiResponse<IEnumerable<RentPaymentDto>>.FailResponse("No rent payments found for this month");
-
-            var mapped = _mapper.Map<IEnumerable<RentPaymentDto>>(payments);
+            // Return empty list instead of failing
+            var mapped = _mapper.Map<IEnumerable<RentPaymentDto>>(payments ?? new List<RentPayment>());
             return ApiResponse<IEnumerable<RentPaymentDto>>.SuccessResponse(mapped);
         }
+
+
+        //public async Task<ApiResponse<IEnumerable<RentPaymentDto>>> GetRentPaymentsByMonthAsync(string month)
+        //{
+        //    if (!DateTime.TryParse(month + "-01", out var monthDate))
+        //        return ApiResponse<IEnumerable<RentPaymentDto>>.FailResponse("Invalid month format");
+
+        //    var payments = await _paymentRepository.GetRentPaymentsByMonthAsync(monthDate);
+
+        //    if (payments == null || !payments.Any())
+        //        return ApiResponse<IEnumerable<RentPaymentDto>>.FailResponse("No rent payments found for this month");
+
+        //    var mapped = _mapper.Map<IEnumerable<RentPaymentDto>>(payments);
+        //    return ApiResponse<IEnumerable<RentPaymentDto>>.SuccessResponse(mapped);
+        //}
 
     }
 }

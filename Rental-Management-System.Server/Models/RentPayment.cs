@@ -20,6 +20,10 @@ namespace Rental_Management_System.Server.Models
         public decimal DueAmount => TotalAmount - PaidAmount;
         public string status { get; set; }
 
+        // electricity meter reading recorded for this payment/month
+        public decimal? ElectricityUnitReading { get; set; }
+
+
 
         // Navigation Property 
         public Room Room { get; set; }

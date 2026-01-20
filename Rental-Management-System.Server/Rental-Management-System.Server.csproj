@@ -34,6 +34,7 @@
 
   <ItemGroup>
     <Folder Include="NewFolder\" />
+    <Folder Include="Repositories\NewFolder\" />
   </ItemGroup>
 
 </Project>

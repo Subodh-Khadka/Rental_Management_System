@@ -19,7 +19,7 @@ namespace Rental_Management_System.Server.Controllers.User
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
-        {
+        {       
             var users = await _userService.GetAllUsersAsync();
             return Ok(users);
         }

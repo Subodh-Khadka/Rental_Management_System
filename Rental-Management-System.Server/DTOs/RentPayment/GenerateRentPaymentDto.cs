@@ -9,3 +9,4 @@ namespace Rental_Management_System.Server.DTOs.RentPayment
 
     }
 }
+    

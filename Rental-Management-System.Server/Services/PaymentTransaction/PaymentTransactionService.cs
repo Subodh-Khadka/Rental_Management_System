@@ -9,8 +9,11 @@ using Rental_Management_System.Server.Repositories.Room;
 
 namespace Rental_Management_System.Server.Services.PaymentTransaction
 {
+    using Rental_Management_System.Server.Data;
     using Rental_Management_System.Server.DTOs.PaymentTransaction;
     using Rental_Management_System.Server.Models;
+    
+
     public class PaymentTransactionService : IPaymentTransactionService
     {
         private readonly IRentPaymentRepository _paymentRepository;
@@ -28,13 +31,21 @@ namespace Rental_Management_System.Server.Services.PaymentTransaction
         public async Task<ApiResponse<IEnumerable<PaymentTransactionDto>>> GetAllPaymentTransactionsAsync()
         {
             var transactions = await _paymentTransactionRepository.GetAllAsync();
-            if (transactions == null)
+            if (transactions == null || !transactions.Any())
             {
                 return ApiResponse<IEnumerable<PaymentTransactionDto>>.FailResponse("No transaction found");
             }
 
-            var transactionDto = _mapper.Map<IEnumerable<PaymentTransactionDto>>(transactions);
-            return ApiResponse<IEnumerable<PaymentTransactionDto>>.SuccessResponse(transactionDto, "data fetched successfully");
+            var transactionDtos = _mapper.Map<IEnumerable<PaymentTransactionDto>>(transactions);
+
+            foreach (var dto in transactionDtos)
+            {
+                dto.TransactionId = MaskingHelper.MaskId(dto.TransactionId);
+                dto.RentPaymentId = MaskingHelper.MaskId(dto.RentPaymentId);
+
+            }
+
+            return ApiResponse<IEnumerable<PaymentTransactionDto>>.SuccessResponse(transactionDtos, "Data fetched successfully");
         }
 
         public async  Task<ApiResponse<PaymentTransactionDto>> GetPaymentTransactionByIdAsync(Guid monthlyChargeId)
