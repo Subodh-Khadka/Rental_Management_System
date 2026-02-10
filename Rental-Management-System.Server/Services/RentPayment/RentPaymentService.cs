@@ -106,19 +106,43 @@ namespace Rental_Management_System.Server.Services.RentPayment
         }
 
 
-        public async Task<ApiResponse<RentPaymentDto>> UpdateRentPaymentAsync(Guid rentPaymentId, UpdateRentPaymentDto updateRentPaymentDto)
+        //public async Task<ApiResponse<RentPaymentDto>> UpdateRentPaymentAsync(Guid rentPaymentId, UpdateRentPaymentDto updateRentPaymentDto)
+        //{
+        //    var rentPayment = await _paymentRepository.GetByIdAsync(rentPaymentId);
+        //    if (rentPayment == null) return ApiResponse<RentPaymentDto>.FailResponse($"Rent payment of Id:{rentPaymentId} was not found.");
+
+
+        //    _mapper.Map(updateRentPaymentDto, rentPayment);
+        //    await _paymentRepository.UpdateAsync(rentPayment);
+        //    await _paymentRepository.SaveChangesAsync();
+
+        //    var rentPaymentDto = _mapper.Map<RentPaymentDto>(rentPayment);
+        //    return ApiResponse<RentPaymentDto>.SuccessResponse(rentPaymentDto, $"Rent payment of id:{rentPaymentId} updated successfully");
+        //}
+
+        public async Task<ApiResponse<RentPaymentDto>> UpdateRentPaymentAsync(
+            Guid rentPaymentId,
+            UpdateRentPaymentDto updateRentPaymentDto)
         {
             var rentPayment = await _paymentRepository.GetByIdAsync(rentPaymentId);
-            if (rentPayment == null) return ApiResponse<RentPaymentDto>.FailResponse($"Rent payment of Id:{rentPaymentId} was not found.");
+            if (rentPayment == null)
+                return ApiResponse<RentPaymentDto>.FailResponse(
+                    $"Rent payment of Id:{rentPaymentId} was not found.");
 
-           
-            _mapper.Map(updateRentPaymentDto, rentPayment);
+            // Update only allowed fields
+            rentPayment.PaidAmount = updateRentPaymentDto.PaidAmount;
+            rentPayment.status = updateRentPaymentDto.Status;
+
             await _paymentRepository.UpdateAsync(rentPayment);
             await _paymentRepository.SaveChangesAsync();
 
             var rentPaymentDto = _mapper.Map<RentPaymentDto>(rentPayment);
-            return ApiResponse<RentPaymentDto>.SuccessResponse(rentPaymentDto, $"Rent payment of id:{rentPaymentId} updated successfully");
+
+            return ApiResponse<RentPaymentDto>.SuccessResponse(
+                rentPaymentDto,
+                $"Rent payment of Id:{rentPaymentId} updated successfully");
         }
+
 
         public async Task<ApiResponse<bool>> DeleteRentPaymentAsync(Guid rentPaymentId)
         {

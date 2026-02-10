@@ -1,4 +1,6 @@
-﻿namespace Rental_Management_System.Server.Repositories.RentalContract
+﻿using Rental_Management_System.Server.Data;
+
+namespace Rental_Management_System.Server.Repositories.RentalContract
 {
     using Microsoft.EntityFrameworkCore;
     using Rental_Management_System.Server.Data;
@@ -17,6 +19,7 @@
             return await _context.RentalContracts.Where(r => !r.IsDeleted)
                 .Include(cr => cr.Room)
                 .Include(cr => cr.Tenant)
+                .OrderBy(r => r.Room.RoomTitle)
                 .ToListAsync();
         }
 
@@ -51,4 +54,3 @@
 
     }
 }
-

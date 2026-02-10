@@ -22,6 +22,10 @@ namespace Rental_Management_System.Server.Data
         {
             base.OnModelCreating(modelBuilder);
 
+           /* modelBuilder.Entity<MeterReading>()
+            .HasIndex(r => new { r.RoomId, r.Month })
+            .IsUnique();*/
+
             // RentPayment → Room, no cascade delete
             modelBuilder.Entity<RentPayment>()
                 .HasOne(rp => rp.Room)

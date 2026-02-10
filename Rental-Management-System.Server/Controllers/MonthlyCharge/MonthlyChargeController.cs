@@ -41,14 +41,34 @@ namespace Rental_Management_System.Server.Controllers.MonthlyCharge
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
-        [HttpPut("{monthlyChargeId}")]
-        public async Task<IActionResult> UpdateMonthlyCharge(Guid monthlyChargeId, [FromBody] UpdateMonthlyChargeDto updateMonthlyChargeDto)
-        {
-            if (monthlyChargeId == Guid.Empty) return NotFound(nameof(monthlyChargeId));
+        //[HttpPut("{monthlyChargeId}")]
+        //public async Task<IActionResult> UpdateMonthlyCharge(Guid monthlyChargeId, [FromBody] UpdateMonthlyChargeDto updateMonthlyChargeDto)
+        //{
+        //    if (monthlyChargeId == Guid.Empty) return NotFound(nameof(monthlyChargeId));
 
-           var response = await _monthlyChargeService.UpdateMonthlyChargeAsync(monthlyChargeId, updateMonthlyChargeDto);
-            return response.Success ? Ok(response) : BadRequest(response);
+        //   var response = await _monthlyChargeService.UpdateMonthlyChargeAsync(monthlyChargeId, updateMonthlyChargeDto);
+        //    return response.Success ? Ok(response) : BadRequest(response);
+        //}
+
+        [HttpPut("{monthlyChargeId}")]
+        // [Authorize(Roles = "Admin")]  // enable when auth is ready
+        public async Task<IActionResult> UpdateMonthlyCharge(Guid monthlyChargeId,[FromBody] UpdateMonthlyChargeDto dto)
+        {
+            if (monthlyChargeId == Guid.Empty)
+                return BadRequest("Invalid monthly charge id");
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var response = await _monthlyChargeService
+                .UpdateMonthlyChargeAsync(monthlyChargeId, dto);
+
+            if (!response.Success)
+                return BadRequest(response);
+
+            return Ok(response);
         }
+
 
         [HttpDelete("{monthlyChargeId}")]
         public async Task<IActionResult> DeleteMonthlyCharge(Guid monthlyChargeId)
@@ -71,6 +91,15 @@ namespace Rental_Management_System.Server.Controllers.MonthlyCharge
         {
             var result = await _monthlyChargeService.GetMonthlyChargeSummaryAsync();
             return Ok(result);
+        }
+
+        [HttpGet("by-room-month/{roomId}/{month}")]
+        public async Task<IActionResult> GetByRoomAndMonth(Guid roomId, string month)
+        {
+            var response = await _monthlyChargeService.GetMonthlyChargesByRoomAndMonthAsync(roomId, month);
+            if (!response.Success)
+                return BadRequest(response);
+            return Ok(response);
         }
 
 

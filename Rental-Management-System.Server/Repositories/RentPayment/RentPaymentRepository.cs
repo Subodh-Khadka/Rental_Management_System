@@ -62,23 +62,25 @@
         {
             return _context.RentPayments.Where(m => !m.IsDeleted).Include(p => p.Room)
                 .Include(r => r.RentalContract).ThenInclude(r => r.Room);
-
-
         }
 
         public async Task AddRangeAsync(IEnumerable<RentPayment> rentPaymentList)
         {
             await _context.RentPayments.AddRangeAsync(rentPaymentList);
         }
-    public async Task<IEnumerable<RentPayment>> GetRentPaymentsByMonthAsync(DateTime month)
+        public async Task<IEnumerable<RentPayment>> GetRentPaymentsByMonthAsync(DateTime monthDate)
         {
-            return await _context.RentPayments.Where(rp => !rp.IsDeleted)
-               .Include(rp => rp.Room)
-               .Include(rp => rp.RentalContract)
-                   .ThenInclude(rc => rc.Tenant)
-               .Where(rp => rp.PaymentMonth.Year == month.Year &&
-                            rp.PaymentMonth.Month == month.Month)
-               .ToListAsync();
+            return await _context.RentPayments
+                .Include(rp => rp.Room).OrderBy(r => r.Room.RoomTitle)
+                .Include(rp => rp.RentalContract)
+                    .ThenInclude(rc => rc.Tenant)
+                 .Include(rp => rp.MonthlyCharges)
+                .Where(rp => rp.Room != null && rp.Room.IsActive == true &&
+                             rp.PaymentMonth.Year == monthDate.Year &&
+                             rp.PaymentMonth.Month == monthDate.Month)
+                .ToListAsync();
         }
+
+
     }
 }

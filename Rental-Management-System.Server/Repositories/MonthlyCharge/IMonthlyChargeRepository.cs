@@ -16,7 +16,7 @@
         // ✅ Return entities instead of DTOs
         Task<IEnumerable<MonthlyCharge>> GetAllWithRelationsAsync();
         IQueryable<MonthlyCharge> Query();
-
+        Task<IEnumerable<MonthlyCharge>> GetByRoomAndMonthAsync(Guid roomId, DateTime monthDate);
 
     }
 }

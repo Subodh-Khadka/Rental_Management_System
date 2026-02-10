@@ -82,5 +82,21 @@
                         .ThenInclude(c => c.Tenant);
         }
 
+        public async Task<IEnumerable<MonthlyCharge>> GetByRoomAndMonthAsync(Guid roomId, DateTime monthDate)
+        {
+            return await _context.MonthlyCharges
+                .Include(mc => mc.RentPayment)
+                    .ThenInclude(rp => rp.Room)
+                .Include(mc => mc.RentPayment)
+                    .ThenInclude(rp => rp.RentalContract)
+                        .ThenInclude(rc => rc.Tenant)
+                .Where(mc => mc.RentPayment.RoomId == roomId &&
+                             mc.RentPayment.PaymentMonth.Year == monthDate.Year &&
+                             mc.RentPayment.PaymentMonth.Month == monthDate.Month &&
+                             !mc.IsDeleted)
+                .ToListAsync();
+        }
+
+
     }
 }

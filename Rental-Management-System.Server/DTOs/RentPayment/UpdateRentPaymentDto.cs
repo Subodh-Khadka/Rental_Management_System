@@ -8,5 +8,6 @@ namespace Rental_Management_System.Server.DTOs.RentPayment
         public Guid PaymentId { get; set; }
         public decimal PaidAmount { get; set; }
         public DateTime? PaymentMonth {  get; set; }
+        public string Status {  get; set; }
     }
 }

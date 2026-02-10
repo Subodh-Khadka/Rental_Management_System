@@ -9,7 +9,8 @@ using Rental_Management_System.Server.Repositories.MonthlyCharge;
 
 namespace Rental_Management_System.Server.Services.MonthlyCharge
 {
-using Rental_Management_System.Server.Models;
+    using Rental_Management_System.Server.Data;
+    using Rental_Management_System.Server.Models;
     using Rental_Management_System.Server.Repositories.CharegTemplate;
     using Rental_Management_System.Server.Repositories.MeterReading;
     using Rental_Management_System.Server.Repositories.RentPayment;
@@ -71,21 +72,56 @@ using Rental_Management_System.Server.Models;
             return ApiResponse<MonthlyChargeDto>.SuccessResponse(monthlychargeDto, "Data fetched successfully");
         }
 
-        public async Task<ApiResponse<MonthlyChargeDto>> UpdateMonthlyChargeAsync(Guid monthlyChargeId, UpdateMonthlyChargeDto updateMonthlyChargeDto)
+        //public async Task<ApiResponse<MonthlyChargeDto>> UpdateMonthlyChargeAsync(Guid monthlyChargeId, UpdateMonthlyChargeDto updateMonthlyChargeDto)
+        //{
+        //    var monthlyCharge = await _monthlyChargeRepository.GetByIdAsync(monthlyChargeId);
+        //    if (monthlyCharge == null) return ApiResponse<MonthlyChargeDto>.FailResponse($"monthly charge of Id:{monthlyChargeId} was not found.");
+
+        //    var rentPayment = _paymentRepository.GetByIdAsync(updateMonthlyChargeDto.RentPaymentId);
+        //    if (rentPayment == null) return ApiResponse<MonthlyChargeDto>.FailResponse("Invalid payment Id");
+
+        //    _mapper.Map(updateMonthlyChargeDto, monthlyCharge);
+        //    await _monthlyChargeRepository.UpdateAsync(monthlyCharge);
+        //    await _monthlyChargeRepository.SaveChangesAsync();
+
+        //    var monthlyChargeDto = _mapper.Map<MonthlyChargeDto>(monthlyCharge);
+        //    return ApiResponse<MonthlyChargeDto>.SuccessResponse(monthlyChargeDto, $"Monthly charge of id:{monthlyChargeId} update successfully");
+        //}
+
+        public async Task<ApiResponse<MonthlyChargeDto>> UpdateMonthlyChargeAsync(Guid monthlyChargeId, UpdateMonthlyChargeDto dto)
         {
-            var monthlyCharge = await _monthlyChargeRepository.GetByIdAsync(monthlyChargeId);
-            if (monthlyCharge == null) return ApiResponse<MonthlyChargeDto>.FailResponse($"monthly charge of Id:{monthlyChargeId} was not found.");
+            var monthlyCharge = await _monthlyChargeRepository
+                .Query()
+                .Include(mc => mc.RentPayment)
+                .FirstOrDefaultAsync(mc => mc.MonthlyChargeId == monthlyChargeId);
 
-            var rentPayment = _paymentRepository.GetByIdAsync(updateMonthlyChargeDto.RentPaymentId);
-            if (rentPayment == null) return ApiResponse<MonthlyChargeDto>.FailResponse("Invalid payment Id");
+            if (monthlyCharge == null)
+                return ApiResponse<MonthlyChargeDto>
+                    .FailResponse($"Monthly charge of Id:{monthlyChargeId} not found");
 
-            _mapper.Map(updateMonthlyChargeDto, monthlyCharge);
-            await _monthlyChargeRepository.UpdateAsync(monthlyCharge);
+            // 🔒 NO RentPaymentId from client
+            var rentPayment = monthlyCharge.RentPayment;
+
+            if (rentPayment == null)
+                return ApiResponse<MonthlyChargeDto>
+                    .FailResponse("Associated rent payment not found");
+
+            // 🔒 Protect paid charges
+            if (rentPayment.status == StaticDetail.RentPaymentStatusPaid)
+                return ApiResponse<MonthlyChargeDto>
+                    .FailResponse("Paid charges cannot be edited");
+
+            // Apply allowed changes only
+            monthlyCharge.Amount = dto.Amount;
+            monthlyCharge.Units = dto.Units;
+
             await _monthlyChargeRepository.SaveChangesAsync();
 
-            var monthlyChargeDto = _mapper.Map<MonthlyChargeDto>(monthlyCharge);
-            return ApiResponse<MonthlyChargeDto>.SuccessResponse(monthlyChargeDto, $"Monthly charge of id:{monthlyChargeId} update successfully");
+            var result = _mapper.Map<MonthlyChargeDto>(monthlyCharge);
+            return ApiResponse<MonthlyChargeDto>
+                .SuccessResponse(result, "Monthly charge adjusted successfully");
         }
+
 
         public async Task<ApiResponse<bool>> DeleteMonthlyChargeAsync(Guid monthlyChargeId)
         {
@@ -218,16 +254,6 @@ using Rental_Management_System.Server.Models;
             }
         }
 
-
-
-
-
-
-
-
-
-
-
         public async Task<ApiResponse<IEnumerable<MonthlyChargeSummaryDto>>> GetMonthlyChargeSummaryAsync()
         {
             var result = await _monthlyChargeRepository.GetAllWithRelationsAsync();
@@ -256,6 +282,20 @@ using Rental_Management_System.Server.Models;
                 .ToList();
 
             return ApiResponse<IEnumerable<MonthlyChargeSummaryDto>>.SuccessResponse(summary, "Data fetched successfully");
+        }
+
+        public async Task<ApiResponse<IEnumerable<MonthlyChargeDto>>> GetMonthlyChargesByRoomAndMonthAsync(Guid roomId, string month)
+        {
+            if (roomId == Guid.Empty)
+                return ApiResponse<IEnumerable<MonthlyChargeDto>>.FailResponse("Invalid room Id");
+
+            if (!DateTime.TryParseExact(month + "-01", "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out var monthDate))
+                return ApiResponse<IEnumerable<MonthlyChargeDto>>.FailResponse("Invalid month format");
+
+            var charges = await _monthlyChargeRepository.GetByRoomAndMonthAsync(roomId, monthDate);
+
+            var mapped = _mapper.Map<IEnumerable<MonthlyChargeDto>>(charges ?? new List<MonthlyCharge>());
+            return ApiResponse<IEnumerable<MonthlyChargeDto>>.SuccessResponse(mapped, "Monthly charges fetched successfully");
         }
 
     }

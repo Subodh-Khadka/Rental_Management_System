@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Rental_Management_System.Server.Data;
 using Rental_Management_System.Server.MappingProfiles;
+using Rental_Management_System.Server.Middleware;
 using Rental_Management_System.Server.Models;
 using Rental_Management_System.Server.Repositories.CharegTemplate;
 using Rental_Management_System.Server.Repositories.MeterReading;
@@ -75,6 +76,7 @@ namespace Rental_Management_System.Server
 
             // Add controllers
             builder.Services.AddControllers();
+         
 
             // Register repositories
             builder.Services.AddScoped<IRoomRepository, RoomRepository>();
@@ -122,7 +124,7 @@ namespace Rental_Management_System.Server
             {
                 options.SwaggerDoc("v1", new() { Title = "Rental Management API", Version = "v1" });
 
-                // ✅ Add JWT Authorization button in Swagger UI
+                // Add JWT Authorization button in Swagger UI
                 options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
                 {
                     Name = "Authorization",
@@ -172,6 +174,7 @@ namespace Rental_Management_System.Server
                 app.UseSwaggerUI();
             }
 
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseHttpsRedirection();
 

@@ -13,6 +13,7 @@ namespace Rental_Management_System.Server.DTOs.RentPayment
         public decimal TotalAmount { get; set; }
         public decimal PaidAmount { get; set; }
         public decimal DueAmount { get; set; }
+        public string Status { get; set; }
 
 
         // Navigation Data (Flattened for client)

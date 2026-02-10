@@ -15,6 +15,5 @@ namespace Rental_Management_System.Server.DTOs.MonthlyCharge
         public decimal Amount { get; set; }
         [Range(0, double.MaxValue, ErrorMessage = "Units must be positive.")]
         public decimal? Units { get; set; }
-
     }
 }

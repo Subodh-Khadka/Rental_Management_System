@@ -19,3 +19,21 @@ namespace Rental_Management_System.Server.Models
         public bool? IsActive { get; set; } = true;
     }
 }
+
+
+public class Student
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public ICollection<Subject> Subjects { get; set; } = new List<Subject>();
+
+}
+
+public class Subject
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+
+    public int StudentId { get; set; }
+    public Student Student { get; set; }
+}
