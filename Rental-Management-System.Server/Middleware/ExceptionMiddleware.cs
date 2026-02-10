@@ -26,20 +26,7 @@ namespace Rental_Management_System.Server.Middleware
             }
             catch (Exception ex)
             {
-                /* _logger.LogError(ex, "Unhandled exception occurred");
-
-                 context.Response.ContentType = "application/json";
-                 context.Response.StatusCode = ex switch
-                 {
-                     NotFoundException => (int)HttpStatusCode.NotFound,
-                     BadRequestException => (int)HttpStatusCode.BadRequest,
-                     _ => (int)HttpStatusCode.InternalServerError
-                 };
-
-                 var response = ApiResponse<string>.FailResponse(ex.Message);
-                 await context.Response.WriteAsJsonAsync(response);*/
-
-                _logger.LogError(ex, ex.Message);
+               _logger.LogError(ex, ex.Message);
                 await HandleExceptionAsync(context, ex);
             }
         }
@@ -52,7 +39,7 @@ namespace Rental_Management_System.Server.Middleware
             {
                 statusCode = context.Response.StatusCode,
                 message = "Something went wrong. Please try again later.",
-                detail = ex.Message // later remove this in production
+                detail = ex.Message // later remove this in production so that we do not expose important details to the client
             };
 
             return context.Response.WriteAsync(JsonSerializer.Serialize(response));

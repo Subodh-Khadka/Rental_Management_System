@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Rental_Management_System.Server.DTOs;
 using Rental_Management_System.Server.DTOs.Auth;
+using Rental_Management_System.Server.Filters;
 using Rental_Management_System.Server.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -13,6 +15,7 @@ namespace Rental_Management_System.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [TypeFilter(typeof(AuthExceptionFilter))]
     public class AuthController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -33,7 +36,7 @@ namespace Rental_Management_System.Server.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterDto dto)
         {
             if (await _userManager.FindByEmailAsync(dto.Email) != null)
-                return BadRequest("Email already registered.");
+                return BadRequest(ApiResponse<string>.FailResponse("Email already registered."));
 
             var user = new ApplicationUser
             {
@@ -48,11 +51,11 @@ namespace Rental_Management_System.Server.Controllers
             var result = await _userManager.CreateAsync(user, dto.Password);
 
             if (!result.Succeeded)
-                return BadRequest(result.Errors);
+                return BadRequest(ApiResponse<string>.FailResponse("Failed to create user"));
 
             await _userManager.AddToRoleAsync(user, "User");
 
-            return result.Succeeded ? Ok(result) : BadRequest(result);
+            return Ok(ApiResponse<string>.SuccessResponse("User registered successfully"));
         }
 
         [HttpPost("login")]
