@@ -2,7 +2,6 @@
 
 namespace Rental_Management_System.Server.Models
 {
-
     public class RentPayment
     {
         [Key]
@@ -22,8 +21,6 @@ namespace Rental_Management_System.Server.Models
 
         // electricity meter reading recorded for this payment/month
         public decimal? ElectricityUnitReading { get; set; }
-
-
 
         // Navigation Property 
         public Room Room { get; set; }
